@@ -1,4 +1,4 @@
-# Weather App (Spring Boot) s
+# Weather App (Spring Boot)
 
 This is a simple Spring Boot app that fetches weather data from WeatherStack and OpenWeather APIs.
 
