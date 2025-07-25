@@ -21,6 +21,7 @@ Units are set to metric.
 ## Trade-offs 
   If I were to spend additional time on the task, I would have: 
  - Added security OAuth? 
+ - Added versioning for the endpoints: GET http://api.example.com/api/v1/weather?city=Sydney 
  - Added OWASP/ESAPI jars to check for CVE vulnerabilities
  - Run a coverage report on JACOCO
  - Better tiers/layer separation of client classes vs service classes 
