@@ -22,6 +22,7 @@ Units are set to metric.
   If I were to spend additional time on the task, I would have: 
  - Added security OAuth? 
  - Added versioning for the endpoints: GET http://api.example.com/api/v1/weather?city=Sydney 
+ - Added ability to send other parameters like temperature units, wind speed units, etc. 
  - Added OWASP/ESAPI jars to check for CVE vulnerabilities
  - Run a coverage report on JACOCO
  - Better tiers/layer separation of client classes vs service classes 
@@ -35,6 +36,7 @@ Units are set to metric.
  - Tests: I included unit tests for key components only. 
  - CI/CD pipeline or Dockerization: I kept it local, though containerizing and deploying via GitHub Actions or similar would be standard in a real project.
  - Documentation: I included basic comments and a README, but would normally add OpenAPI (Swagger) documentation for the API interface.
+ - I include a nice diagram based on the UML specification. 
  - Add a proper interface-based abstraction layer for the weather providers, with a registry/factory pattern so that new providers could be swapped in without changing controller logic.
  - Introduce Resilience4j to handle retries, fallbacks, timeouts, and circuit breakers around external API calls.
  - Add logging and metrics (via SLF4J + Micrometer) for observability.
