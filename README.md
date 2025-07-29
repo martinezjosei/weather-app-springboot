@@ -15,7 +15,7 @@ This is a simple Spring Boot app that fetches weather data from WeatherStack and
 
 ## Demo
 Try `/weather?city=Sydney` once it's running.
-I will default to 'Melbourne' if no city is entered. 
+It will default to 'Melbourne' if no city is entered. 
 Units are set to metric. 
 
 ## Trade-offs 
