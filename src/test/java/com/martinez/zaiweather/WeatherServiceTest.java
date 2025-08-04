@@ -1,8 +1,8 @@
 package com.martinez.zaiweather;
 
-import com.martinez.zaiweather.cache.WeatherCache;
+import com.martinez.zaiweather.cache.WeatherCache_OLD;
 import com.martinez.zaiweather.dto.WeatherResponse;
-import com.martinez.zaiweather.service.WeatherClient;
+import com.martinez.zaiweather.client.WeatherClient_OLD;
 import com.martinez.zaiweather.service.WeatherServiceImpl;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WeatherServiceTest {
 
     @Mock
-    private WeatherClient weatherClient;
+    private WeatherClient_OLD weatherClient;
 
     @InjectMocks
     private WeatherServiceImpl weatherService;
@@ -25,7 +25,7 @@ public class WeatherServiceTest {
     @BeforeEach
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        WeatherCache.setCache(null); // Clear cache between tests
+        WeatherCache_OLD.setCache(null); // Clear cache between tests
     }
 
     @AfterEach
@@ -40,8 +40,8 @@ public class WeatherServiceTest {
 
         WeatherResponse result = weatherService.getWeatherForCity("melbourne");
 
-        assertEquals(15.7, result.getTemperatureCelsius());
-        assertEquals(12.3, result.getWindSpeed());
+        assertEquals(15.7, result.temperatureCelsius());
+        assertEquals(12.3, result.windSpeed());
         verify(weatherClient, times(1)).fetchFromWeatherStack("melbourne");
         verify(weatherClient, never()).fetchFromOpenWeather(anyString());
     }
@@ -53,8 +53,8 @@ public class WeatherServiceTest {
 
         WeatherResponse result = weatherService.getWeatherForCity("Sydney");
 
-        assertEquals(11.1, result.getTemperatureCelsius());
-        assertEquals(22.2, result.getWindSpeed());
+        assertEquals(11.1, result.temperatureCelsius());
+        assertEquals(22.2, result.windSpeed());
         verify(weatherClient, times(1)).fetchFromWeatherStack("Sydney");
         verify(weatherClient, never()).fetchFromOpenWeather(anyString());
     }
@@ -69,8 +69,8 @@ public class WeatherServiceTest {
 
         WeatherResponse result = weatherService.getWeatherForCity("melbourne");
 
-        assertEquals(18.0, result.getTemperatureCelsius());
-        assertEquals(12.0, result.getWindSpeed());
+        assertEquals(18.0, result.temperatureCelsius());
+        assertEquals(12.0, result.windSpeed());
         verify(weatherClient).fetchFromWeatherStack("melbourne");
         verify(weatherClient).fetchFromOpenWeather("melbourne");
     }
@@ -78,7 +78,7 @@ public class WeatherServiceTest {
     @Test
     void testBothProvidersFailReturnsStaleCache() {
         WeatherResponse cached = new WeatherResponse(19.0, 14.0);
-        WeatherCache.setCache(cached);
+        WeatherCache_OLD.setCache(cached);
 
         when(weatherClient.fetchFromWeatherStack("melbourne"))
                 .thenThrow(new RuntimeException("Primary failed"));
@@ -87,13 +87,13 @@ public class WeatherServiceTest {
 
         WeatherResponse result = weatherService.getWeatherForCity("melbourne");
 
-        assertEquals(19.0, result.getTemperatureCelsius());
-        assertEquals(14.0, result.getWindSpeed());
+        assertEquals(19.0, result.temperatureCelsius());
+        assertEquals(14.0, result.windSpeed());
     }
 
     @Test
     void testBothProvidersFailNoCacheThrowsException() {
-        WeatherCache.setCache(null);
+        WeatherCache_OLD.setCache(null);
 
         when(weatherClient.fetchFromWeatherStack("melbourne"))
                 .thenThrow(new RuntimeException("No weather provider is available at this time"));

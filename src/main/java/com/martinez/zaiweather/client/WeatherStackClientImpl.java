@@ -1,35 +1,46 @@
-package com.martinez.zaiweather.service;
+package com.martinez.zaiweather.client;
 
+import com.martinez.zaiweather.constants.WeatherConstants;
+import com.martinez.zaiweather.dto.WeatherData;
 import com.martinez.zaiweather.dto.WeatherResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Map;
 
-@Service
-
-public class WeatherClient {
+@Order(2)
+@Component
+public class WeatherStackClientImpl implements WeatherClient {
 
     @Value("${weather.apis.weatherstack.key}")
     private String weatherstackKey;
 
-    @Value("${weather.apis.openweather.key}")
-    private String openWeatherKey;
-
-
     private final RestTemplate restTemplate = new RestTemplate();
 
 
-    @SuppressWarnings("unchecked")
-    public WeatherResponse fetchFromWeatherStack(String city) {
+    @Override
+    public String getProviderName() {
+        return WeatherConstants.WEATHERSTACK;
+    }
+
+    @Override
+    public WeatherData getWeatherData(String city) {
+        // Prepare settings for the call
         String key = weatherstackKey;
 
+        // Call WeatherStack API
+        return fetchFromWeatherStack(city, key);
+    }
+
+
+    public WeatherData fetchFromWeatherStack(String city, String key) {
         URI uri = UriComponentsBuilder
                 .fromUriString("http://api.weatherstack.com/current")
                 .queryParam("query", city)
@@ -52,39 +63,12 @@ public class WeatherClient {
         Map<String, Object> current = (Map<String, Object>) body.get("current");
         double temp = ((Number) current.get("temperature")).doubleValue();
         double windSpeed = ((Number) current.get("wind_speed")).doubleValue();
-        return new WeatherResponse(temp, windSpeed);
+
+        WeatherData weatherData = new WeatherData(getProviderName(), city);
+        weatherData.setTemperature(temp);
+        weatherData.setWindSpeed(windSpeed);
+
+        return weatherData;
     }
 
-    @SuppressWarnings("unchecked")
-    public WeatherResponse fetchFromOpenWeather(String city) {
-        String key = openWeatherKey;
-
-        URI uri = UriComponentsBuilder
-                .fromUriString("http://api.openweathermap.org/data/2.5/weather")
-                .queryParam("q", city)
-                .queryParam("appid", key)
-                .queryParam("units", "metric")
-                .build()
-                .toUri();
-
-
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<Map<String, Object>>() {}
-        );
-
-        Map<String, Object> body = response.getBody();
-
-        assert body != null;
-        Map<String, Object> main = (Map<String, Object>) body.get("main");
-        double temp = ((Number) main.get("temp")).doubleValue();
-
-        Map<String, Object> wind = (Map<String, Object>) body.get("wind");
-        double windSpeed = ((Number) wind.get("speed")).doubleValue();
-
-        return new WeatherResponse(temp, windSpeed);
-    }
 }
-
