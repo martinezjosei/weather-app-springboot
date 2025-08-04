@@ -55,11 +55,15 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
 
-    private WeatherResponse processWeatherObject(Weather weather){
+    public WeatherResponse processWeatherObject(Weather weather){
         // Here we process the domain object - Weather and return the presentation object
         System.out.println("Processing data for " + weather.getProvider());
 
-        return new WeatherResponse(weather.getTemperature(), weather.getWindSpeed());
+        WeatherResponse weatherResponse = new WeatherResponse();
+        weatherResponse.setTemperatureCelsius(weather.getTemperature());
+        weatherResponse.setWindSpeed(weather.getWindSpeed());
+
+        return weatherResponse;
     }
 
 
