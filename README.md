@@ -8,6 +8,9 @@ This is a simple Spring Boot app that fetches weather data from WeatherStack and
 - Basic unit tests with JUnit and Mockito
 - API Keys are pulled from the .env file (not included for security)
 
+## GitHub Location
+- https://github.com/martinezjosei/weather-app-springboot 
+
 ## How to Run
 1. Clone the repo
 2. Add your API keys in `.env` or `application.yml`
